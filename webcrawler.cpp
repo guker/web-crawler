@@ -1,11 +1,11 @@
 /*
-                    ÍøÂçÅÀ³æ
-    ÅÀ³æËã·¨Ö÷ÒªÊ¹ÓÃÕıÔò±í´ïÊ½ÒÔ¼°Í¼µÄ¿í¶ÈÓÅÏÈ±éÀú(BFS)
+                    ç½‘ç»œçˆ¬è™«
+    çˆ¬è™«ç®—æ³•ä¸»è¦ä½¿ç”¨æ­£åˆ™è¡¨è¾¾å¼ä»¥åŠå›¾çš„å®½åº¦ä¼˜å…ˆéå†(BFS)
 	@modify by hqwsky
 	@date 2016/3/22
 */
 
-#define _CRT_SECURE_NO_WARNINGS   //vs 2013ÓÃÓÚºöÂÔcÓïÑÔ°²È«ĞÔ¾¯¸æ
+#define _CRT_SECURE_NO_WARNINGS   //vs 2013ç”¨äºå¿½ç•¥cè¯­è¨€å®‰å…¨æ€§è­¦å‘Š
 #include <cstdio>
 #include <iostream>
 #include <fstream>
@@ -25,22 +25,22 @@ char othPath[800];
 string allHtml;
 vector <string> photoUrl;
 vector <string> comUrl;
-map <string, int> mp; //·ÀÖ¹ÏàÍ¬ÍøÖ·ÖØ¸´±éÀú
+map <string, int> mp; //é˜²æ­¢ç›¸åŒç½‘å€é‡å¤éå†
 SOCKET sock;
-bool analyUrl(char *url) //½öÖ§³ÖhttpĞ­Òé,½âÎö³öÖ÷»úºÍIPµØÖ·
+bool analyUrl(char *url) //ä»…æ”¯æŒhttpåè®®,è§£æå‡ºä¸»æœºå’ŒIPåœ°å€
 {
 	char *pos = strstr(url, "http://");
 	if (pos == NULL)
 		return false;
 	else
 		pos += 7;
-	sscanf(pos, "%[^/]%s", host, othPath);   //http:// ºóÒ»Ö±µ½/Ö®Ç°µÄÊÇÖ÷»úÃû
+	sscanf(pos, "%[^/]%s", host, othPath);   //http:// åä¸€ç›´åˆ°/ä¹‹å‰çš„æ˜¯ä¸»æœºå
 	cout << "host: " << host << "   repath:" << othPath << endl;
 	return true;
 }
 
 
-void regexGetimage(string &allHtml)  //C++11 ÕıÔò±í´ïÊ½ÌáÈ¡Í¼Æ¬url
+void regexGetimage(string &allHtml)  //C++11 æ­£åˆ™è¡¨è¾¾å¼æå–å›¾ç‰‡url
 {
 	smatch mat;
 	regex pattern("src=\"(.*?\.jpg)\"");
@@ -54,7 +54,7 @@ void regexGetimage(string &allHtml)  //C++11 ÕıÔò±í´ïÊ½ÌáÈ¡Í¼Æ¬url
 	}
 }
 
-void regexGetcom(string &allHtml) //ÌáÈ¡ÍøÒ³ÖĞµÄhttp://µÄurl
+void regexGetcom(string &allHtml) //æå–ç½‘é¡µä¸­çš„http://çš„url
 {
 	smatch mat;
 	//regex pattern("href=\"(.*?\.html)\"");
@@ -68,27 +68,27 @@ void regexGetcom(string &allHtml) //ÌáÈ¡ÍøÒ³ÖĞµÄhttp://µÄurl
 		start = mat[0].second;
 	}
 }
-void preConnect()  //socket½øĞĞÍøÂçÁ¬½Ó
+void preConnect()  //socketè¿›è¡Œç½‘ç»œè¿æ¥
 {
 	WSADATA wd;
 	WSAStartup(MAKEWORD(2, 2), &wd);
     sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == INVALID_SOCKET)
 	{
-		cout << "½¨Á¢socketÊ§°Ü£¡ ´íÎóÂë£º " << WSAGetLastError() << endl;
+		cout << "å»ºç«‹socketå¤±è´¥ï¼ é”™è¯¯ç ï¼š " << WSAGetLastError() << endl;
 		return;
 	}
 	sockaddr_in sa = { AF_INET };
 	int n = bind(sock, (sockaddr*)&sa, sizeof(sa));
 	if (n == SOCKET_ERROR)
 	{
-		cout << "bindº¯ÊıÊ§°Ü£¡ ´íÎóÂë£º " << WSAGetLastError() << endl;
+		cout << "bindå‡½æ•°å¤±è´¥ï¼ é”™è¯¯ç ï¼š " << WSAGetLastError() << endl;
 		return;
 	}
 	struct hostent  *p = gethostbyname(host);
 	if (p == NULL)
 	{
-		cout << "Ö÷»úÎŞ·¨½âÎö³öip! ´íÎóÂğ£º " << WSAGetLastError() << endl;
+		cout << "ä¸»æœºæ— æ³•è§£æå‡ºip! é”™è¯¯å—ï¼š " << WSAGetLastError() << endl;
 		return;
 	}
 	sa.sin_port = htons(80);
@@ -98,14 +98,14 @@ void preConnect()  //socket½øĞĞÍøÂçÁ¬½Ó
 	n = connect(sock, (sockaddr*)&sa, sizeof(sa));
 	if (n == SOCKET_ERROR)
 	{
-		cout << "connectº¯ÊıÊ§°Ü£¡ ´íÎóÂë£º " << WSAGetLastError() << endl;
+		cout << "connectå‡½æ•°å¤±è´¥ï¼ é”™è¯¯ç ï¼š " << WSAGetLastError() << endl;
 		return;
 	}
-	//Ïñ·şÎñÆ÷·¢ËÍGETÇëÇó£¬ÏÂÔØÍ¼Æ¬
+	//åƒæœåŠ¡å™¨å‘é€GETè¯·æ±‚ï¼Œä¸‹è½½å›¾ç‰‡
 	string  reqInfo = "GET " +(string)othPath+ " HTTP/1.1\r\nHost: " + (string)host + "\r\nConnection:Close\r\n\r\n";
 	if (SOCKET_ERROR == send(sock, reqInfo.c_str(), reqInfo.size(), 0))
 	{
-		cout << "send error! ´íÎóÂë£º " << WSAGetLastError() << endl;
+		cout << "send error! é”™è¯¯ç ï¼š " << WSAGetLastError() << endl;
 		closesocket(sock);
 		return;
 	}
@@ -113,7 +113,7 @@ void preConnect()  //socket½øĞĞÍøÂçÁ¬½Ó
 	
 }
 
-void OutIamge(string imageUrl) //½«Í¼Æ¬ÃüÃû£¬±£´æÔÚÄ¿Â¼ÏÂ
+void OutIamge(string imageUrl) //å°†å›¾ç‰‡å‘½åï¼Œä¿å­˜åœ¨ç›®å½•ä¸‹
 {
 	int n;
 	char temp[800];
@@ -132,6 +132,7 @@ void OutIamge(string imageUrl) //½«Í¼Æ¬ÃüÃû£¬±£´æÔÚÄ¿Â¼ÏÂ
 
 	fstream file;
 	file.open(photoname, ios::out | ios::binary);
+	/*å»é™¤å“åº”æŠ¥æ–‡çš„å¤´éƒ¨*/
 	char buf[2048];
 	memset(buf, 0, sizeof(buf));
 	n = recv(sock, buf, sizeof(buf)-1, 0);
@@ -152,9 +153,9 @@ void OutIamge(string imageUrl) //½«Í¼Æ¬ÃüÃû£¬±£´æÔÚÄ¿Â¼ÏÂ
 }
 
 /*
-   bug: ÏÂÔØµÄhtmlÒ³ÃæÊÇÏàÍ¬µÄ
+   bug: ä¸‹è½½çš„htmlé¡µé¢æ˜¯ç›¸åŒçš„
 */
-void PutImagtoSet()  //½âÎöÕû¸öhtml´úÂë
+void PutImagtoSet()  //è§£ææ•´ä¸ªhtmlä»£ç 
 {
 	int n;
 	//preConnect();
@@ -168,10 +169,10 @@ void PutImagtoSet()  //½âÎöÕû¸öhtml´úÂë
 	regexGetcom(allHtml);
 }
 
-/*        ÅÀ³æµÄÊµÑé¾ÍÊÇÍ¼µÄ¿í¶ÈÓÅÏÈ±éÀú(BFS)
-    Ê¹ÓÃmap±ê¼Ç½áµãÊÇ·ñÒÑ¾­±éÀú
+/*        çˆ¬è™«çš„å®éªŒå°±æ˜¯å›¾çš„å®½åº¦ä¼˜å…ˆéå†(BFS)
+    ä½¿ç”¨mapæ ‡è®°ç»“ç‚¹æ˜¯å¦å·²ç»éå†
 */
-void bfs(string beginUrl)  //¿í¶ÈÓÅÏÈËÑË÷£¬ÏñÅÀ³æÒ»Ñù±éÀúÍøÒ³
+void bfs(string beginUrl)  //å®½åº¦ä¼˜å…ˆæœç´¢ï¼Œåƒçˆ¬è™«ä¸€æ ·éå†ç½‘é¡µ
 {
 	queue<string> q;
 	q.push(beginUrl);
@@ -202,8 +203,8 @@ void bfs(string beginUrl)  //¿í¶ÈÓÅÏÈËÑË÷£¬ÏñÅÀ³æÒ»Ñù±éÀúÍøÒ³
 }
 int main()
 {
-	CreateDirectoryA("./img", 0);  //ÔÚ¹¤³ÌÏÂ´´½¨ÎÄ¼ş¼Ğ
-	string beginUrl= "http://images.baidu.com/"; //ÊäÈëÆğÊ¼ÍøÖ·
+	CreateDirectoryA("./img", 0);  //åœ¨å·¥ç¨‹ä¸‹åˆ›å»ºæ–‡ä»¶å¤¹
+	string beginUrl= "http://images.baidu.com/"; //è¾“å…¥èµ·å§‹ç½‘å€
 	bfs(beginUrl);
 	return 0;
 	
